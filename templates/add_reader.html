@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Register a New Reader{% endblock %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2">
+    <h2 class="mb-4">Register a New Reader</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Register Reader</button>
+    </form>
+</div>
+{% endblock %}
