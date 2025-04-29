@@ -10,7 +10,11 @@
 <body>
     <div class="container">
         <header class="d-flex justify-content-between py-3 align-items-center">
-            <h2>WisdomHeaven Library</h2>
+            <h2>
+                <a href="{% url 'librarySystem:index' %}" style="text-decoration: none; color: inherit;">
+                    WisdomHeaven Library
+                </a>
+            </h2>
             <div>
                 {% if user.is_authenticated %}
                     <span class="me-2">Welcome, {{ user.username }}!</span>
@@ -18,16 +22,18 @@
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
                     </form>
+
+                    <!-- Staff-only buttons -->
                     {% if user.is_staff %}
                         <a href="{% url 'librarySystem:add_book' %}" class="btn btn-success btn-sm ms-2">Add Book</a>
-                        <a href="{% url 'librarySystem:add_reader' %}" class="btn btn-warning btn-sm ms-2">Add Reader</a>
-                        <a href="{% url 'librarySystem:borrow_book' %}" class="btn btn-info
+                        <a href="{% url 'librarySystem:reader_list' %}" class="btn btn-warning btn-sm ms-2">Readers</a>
                     {% endif %}
-                    <!-- Borrow a Book Button -->
-                     btn-sm ms-2">Borrow a Book</a>
+
+                    <!-- Common to all logged-in users -->
+                    <a href="{% url 'librarySystem:borrow_book' %}" class="btn btn-info btn-sm ms-2">Borrow a Book</a>
+
                 {% else %}
                     <a href="{% url 'librarySystem:login' %}" class="btn btn-primary btn-sm">Login</a>
-{#                    <a href="{% url 'librarySystem:register' %}" class="btn btn-secondary btn-sm ms-2">Register</a>#}
                 {% endif %}
             </div>
         </header>

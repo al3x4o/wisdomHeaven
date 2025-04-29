@@ -1,7 +1,8 @@
 from django.urls import path
 
 from . import views
-from .views import RegisterView, CustomLoginView, CustomLogoutView, BorrowBooksView, ReturnBookView
+from .views import RegisterView, CustomLoginView, CustomLogoutView, BorrowBooksView, ReturnBookView, ReaderUpdateView, \
+    ReaderListView
 
 app_name = 'librarySystem'
 
@@ -12,6 +13,8 @@ urlpatterns = [
     # Add new book view
     path('add-book/', views.AddBookView.as_view(), name='add_book'),
     path('add-reader/', views.AddReaderView.as_view(), name='add_reader'),
+path("readers/", ReaderListView.as_view(), name="reader_list"),
+path("reader/<int:pk>/edit/", ReaderUpdateView.as_view(), name="edit_reader"),
 
     # Book details view
     path('book/<int:pk>/', views.BookDetailView.as_view(), name='book_detail'),

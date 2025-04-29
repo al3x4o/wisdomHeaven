@@ -3,10 +3,16 @@
 {% block title %}Welcome{% endblock %}
 
 {% block content %}
+<h2>Search Books</h2>
+<form method="get" class="mb-4">
+    <input type="text" name="q" placeholder="Search by title, author, genre, language" value="{{ search_query }}" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Search</button>
+</form>
+
 <div class="row">
     <!-- Available Books -->
     <div class="col-md-6">
-        <h2>Available Books</h2>
+        <h3>Available Books</h3>
         {% if available_books %}
             {% for book in available_books %}
                 <div class="card mb-3">
@@ -18,22 +24,23 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p>No available books right now.</p>
+            <p>No available books found.</p>
         {% endif %}
     </div>
 
     <!-- Borrowed Books -->
     <div class="col-md-6">
-        <h2>Borrowed Books</h2>
+        <h3>Borrowed Books</h3>
         {% if borrowed_books %}
             {% for borrowing in borrowed_books %}
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5>{{ borrowing.book.title }}</h5>
-                        <p><strong>Title:</strong> {{ borrowing.title }}</p>
-                        <p><strong>Author:</strong> {{ borrowing.authors }}</p>
+                        <p><strong>Author:</strong> {{ borrowing.book.authors }}</p>
                         {% if user.is_authenticated %}
-                            <a href="{% url 'librarySystem:return_book' borrowing.pk %}" class="btn btn-sm btn-outline-primary">Mark as Returned</a>
+                            <a href="{% url 'librarySystem:return_book' borrowing.pk %}" class="btn btn-sm btn-outline-primary">
+                            Mark as Returned
+                            </a>
                         {% endif %}
                     </div>
                 </div>

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Reader{% endblock %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header">
+        <h4>Актуализиране на данни за читател</h4>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-primary">Запази промените</button>
+            <a href="{% url 'librarySystem:index' %}" class="btn btn-secondary">Отказ</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,24 +1,23 @@
 from datetime import date
-
 from django.db import models
-
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.db.models import SET_NULL
+
 
 class User(AbstractUser):
     is_library_staff = models.BooleanField(default=False)
 
-    # Fix the related_name clashes
     groups = models.ManyToManyField(
         "auth.Group",
-        related_name="custom_users",  # Change this from 'user_set' to avoid conflict
+        related_name="custom_users",
         blank=True
     )
     user_permissions = models.ManyToManyField(
         "auth.Permission",
-        related_name="custom_users_permissions",  # Change this from 'user_set' to avoid conflict
+        related_name="custom_users_permissions",
         blank=True
     )
+
 
 class Book(models.Model):
     INVENTORY_CHOICES = [
@@ -30,7 +29,7 @@ class Book(models.Model):
     inventory_number = models.CharField(max_length=50, unique=True)
     added_date = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255)
-    authors = models.CharField(max_length=255)  # You can create a separate Author model if needed
+    authors = models.CharField(max_length=255)
     edition_type = models.CharField(max_length=100)
     language = models.CharField(max_length=50)
     acquisition_method = models.CharField(max_length=20, choices=INVENTORY_CHOICES)
@@ -45,9 +44,8 @@ class Book(models.Model):
         return f"{self.title} by {self.authors}"
 
 
-
 class Reader(models.Model):
-    national_id = models.CharField(max_length=10, unique=True)  # Equivalent of EGN in Bulgaria
+    national_id = models.CharField(max_length=10, unique=True)
     full_name = models.CharField(max_length=255)
     address = models.TextField()
     contact_info = models.CharField(max_length=255)
@@ -57,7 +55,7 @@ class Reader(models.Model):
 
 
 class Borrowing(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="borrowings")
     reader = models.ForeignKey(Reader, on_delete=models.CASCADE)
     borrow_date = models.DateField()
     return_date = models.DateField(null=True, blank=True)
@@ -66,16 +64,12 @@ class Borrowing(models.Model):
         return f"{self.reader.full_name} borrowed {self.book.title}"
 
     def save(self, *args, **kwargs):
-        # Update book availability based on borrow and return dates
-        if self.return_date and self.return_date <= date.today():
-            self.book.is_available = True
-        else:
-            self.book.is_available = False
-
         super().save(*args, **kwargs)
-        self.book.save()
 
 
-
-
-
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    rating = models.PositiveIntegerField(default=5)
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -1,7 +1,7 @@
 import datetime
 
 from django import forms
-from .models import Book, Reader, Borrowing, User
+from .models import Book, Reader, Borrowing, User, Review
 
 
 class RegisterForm(forms.ModelForm):
@@ -70,3 +70,13 @@ class ReturnBookForm(forms.ModelForm):
         if not cleaned_data.get("return_date"):
             cleaned_data["return_date"] = datetime.date.today()  # Default to today's date
         return cleaned_data
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['content', 'rating']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 3}),
+            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5}),
+        }

@@ -3,7 +3,7 @@
 {% block title %}{{ book.title }} - Details{% endblock %}
 
 {% block content %}
-    <div class="card">
+    <div class="card mb-4">
         <div class="card-header">
             <h3>{{ book.title }}</h3>
         </div>
@@ -23,5 +23,27 @@
         </div>
     </div>
 
-    <a href="{% url 'librarySystem:index' %}" class="btn btn-secondary mt-3">Back to Home</a>
+    <h4 class="mb-3">Reader Reviews</h4>
+    {% if reviews    %}
+        {% for review in reviews %}
+            <div class="border rounded p-3 mb-3">
+                <strong>{{ review.user.username }}</strong>
+                <span class="text-warning">Rating: {{ review.rating }}/5</span>
+                <p>{{ review.content }}</p>
+                <small class="text-muted">{{ review.created_at|date:"Y-m-d H:i" }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No reviews yet for this book.</p>
+    {% endif %}
+
+        <hr>
+        <h5>Leave a Review</h5>
+        <form method="post">
+            {% csrf_token %}
+            {{ review_form.as_p }}
+            <button type="submit" class="btn btn-primary btn-sm">Submit Review</button>
+        </form>
+
+    <a href="{% url 'librarySystem:index' %}" class="btn btn-secondary mt-4">Back to Home</a>
 {% endblock %}

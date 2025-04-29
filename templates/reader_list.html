@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Читатели{% endblock %}
+
+{% block content %}
+<h3 class="mt-4 mb-3">Списък с читатели</h3>
+
+<!-- Бутон за добавяне на нов читател -->
+<div class="mb-3">
+    <a href="{% url 'librarySystem:add_reader' %}" class="btn btn-success">Добави нов читател</a>
+</div>
+
+<!-- Форма за търсене -->
+<form method="get" action="{% url 'librarySystem:reader_list' %}" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Търси по ЕГН, име, адрес или контакти" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary">Търси</button>
+    </div>
+</form>
+
+<!-- Таблица с резултати -->
+{% if readers %}
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Име</th>
+            <th>ЕГН</th>
+            <th>Адрес</th>
+            <th>Контакт</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reader in readers %}
+        <tr>
+            <td>{{ reader.full_name }}</td>
+            <td>{{ reader.national_id }}</td>
+            <td>{{ reader.address }}</td>
+            <td>{{ reader.contact_info }}</td>
+            <td>
+                <a href="{% url 'librarySystem:edit_reader' reader.pk %}" class="btn btn-sm btn-warning">Редактирай</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">Няма намерени читатели.</div>
+{% endif %}
+{% endblock %}

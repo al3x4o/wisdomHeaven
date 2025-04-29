@@ -2,9 +2,11 @@
 {% block title %}Return Book{% endblock %}
 {% block content %}
     <h2>Return Book</h2>
+    <p>Returning: <strong>{{ object.book.title }}</strong></p>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Return</button>
+        <button type="submit" class="btn btn-success">Confirm Return</button>
+        <a href="{% url 'librarySystem:index' %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}
